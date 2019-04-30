@@ -3,12 +3,16 @@ package com.example.companydetails;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +31,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RecyclerView recyclerView;
+    private AssertsListViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView  = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new AssertsListViewAdapter();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         Intent intent = getIntent();
         int companyID = intent.getIntExtra("companyId", 0);
@@ -66,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         mClient.newCall(builder.build()).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("111111111111111111111111111");
             }
 
             @Override
@@ -76,9 +85,16 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println(myResponse);
                         try {
+                            ArrayList<AssertsData> data = new ArrayList<>();
                             JSONObject obj = new JSONObject(myResponse);
+                            JSONArray jsonArray = obj.getJSONObject("data").getJSONArray("assets");
+                            for(int i=0;i<jsonArray.length(); i++){
+                                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                                data.add( new AssertsData(jsonObject.getString("status"), jsonObject.getJSONObject("image").getString("small_url") ,jsonObject.getString("name")));
+                            }
+                            mAdapter.listdata = data;
+                            mAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
