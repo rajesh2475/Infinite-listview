@@ -38,7 +38,7 @@ public class AssertsListViewAdapter extends RecyclerView.Adapter<AssertsListView
     public void onBindViewHolder(@NonNull AssertsListViewAdapter.ViewHolder myViewHolder, int position) {
         myViewHolder.status.setText(listdata.get(position).getStatus());
         myViewHolder.name.setText(listdata.get(position).getName());
-        //myViewHolder.imageView.setImageResource(listdata[position].getImgURL());
+        myViewHolder.imageView.setImageResource(R.drawable.img);
     }
 
 
