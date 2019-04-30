@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         parameters.put("company_id", String.valueOf(companyID));
         Request.Builder builder = new Request.Builder()
                 .url(APIURL(Url, parameters));
-        builder = builder.header("token", token);
+        builder = builder.header("Authorization","Bearer "+ token);
 
         builder.header("content-Type", "application/json");
 
