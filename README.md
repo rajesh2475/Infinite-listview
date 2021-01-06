@@ -1,2 +1,2 @@
-# Infinite-scroll-view
+# Infinite-scroll-view with custom listadapter
 Android
